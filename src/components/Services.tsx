@@ -4,32 +4,28 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef } from "react";
 
-/*
- * Laid out as a staircase: each group steps further right than the one
- * above it. Not a numbered rail, not a card grid, not a table. The indent
- * is a fixed, deliberate step per row, so it never goes ragged on the
- * length of the copy.
- */
-const groups = [
+const services = [
   {
-    name: "Šminka",
-    items: ["dnevna šminka", "večernja šminka", "šminka za proslave", "probna šminka"],
+    n: "01",
+    title: "Šminka",
+    text: "Profesionalna šminka za svaku priliku — od prirodnog dnevnog izgleda do punog večernjeg glamura.",
   },
   {
-    name: "Mladenke",
-    items: ["proba šminke i frizure", "šminka na dan vjenčanja", "svečane frizure"],
+    n: "02",
+    title: "Mladenke",
+    text: "Proba, šminka i frizura na sam dan — kompletan izgled za tvoj najvažniji dan.",
   },
   {
-    name: "Kosa",
-    items: ["feniranje i lokne", "svečane punđe", "farbanje i pramenovi", "pletenice s perlicama"],
+    n: "03",
+    title: "Kosa",
+    text: "Feniranje, lokne, punđe i farbanje — plus pletenice s perlicama za najmlađe.",
   },
   {
-    name: "Nokti",
-    items: ["manikir", "gel lak", "njega ruku"],
+    n: "04",
+    title: "Nokti",
+    text: "Njegovan manikir u elegantnim tonovima — od klasičnog nude do upečatljive crvene.",
   },
 ];
-
-const indent = ["sm:ml-0", "sm:ml-[8%]", "sm:ml-[16%]", "sm:ml-[24%]"];
 
 export default function Services() {
   const root = useRef<HTMLElement>(null);
@@ -38,63 +34,66 @@ export default function Services() {
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      gsap.from(".svc-move", {
-        y: 30,
-        duration: 1.1,
-        stagger: 0.1,
-        ease: "power3.out",
-        scrollTrigger: { trigger: root.current, start: "top 75%" },
+      gsap.utils.toArray<HTMLElement>(".service-row").forEach((row) => {
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: row, start: "top 85%" },
+          defaults: { ease: "power3.out" },
+        });
+        tl.from(row.querySelector(".service-line"), {
+          scaleX: 0,
+          transformOrigin: "left center",
+          duration: 1.1,
+          ease: "power4.inOut",
+        })
+          .from(row.querySelector(".service-n"), { y: 20, opacity: 0, duration: 0.7 }, "-=0.7")
+          .from(row.querySelector(".service-title"), { y: 34, opacity: 0, duration: 0.8 }, "-=0.55")
+          .from(row.querySelector(".service-text"), { y: 16, opacity: 0, duration: 0.7 }, "-=0.5");
       });
 
-      // Each name drifts at its own rate as the section passes: the
-      // staircase loosens and settles instead of sitting dead.
-      gsap.utils.toArray<HTMLElement>(".svc-name").forEach((el, i) => {
-        gsap.to(el, {
-          x: [10, -8, 12, -6][i] ?? 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: root.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
+      gsap.from(".services-heading", {
+        y: 40,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: { trigger: root.current, start: "top 75%" },
       });
     },
     { scope: root }
   );
 
   return (
-    <section
-      id="usluge"
-      ref={root}
-      className="scroll-mt-24 px-6 py-24 sm:px-8 sm:py-32"
-      style={{ background: "linear-gradient(to bottom, #150609, #1e080e)" }}
-    >
-      <div className="mx-auto max-w-6xl">
-        <p className="svc-move max-w-md text-[0.95rem] leading-[1.75] text-ash">
-          Šminka, kosa i nokti. Sve u istom prostoru, kod istih ruku.
-        </p>
+    <section id="usluge" ref={root} className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24">
+      <div className="services-heading">
+        <p className="text-[0.7rem] uppercase tracking-[0.45em] text-gold">Usluge</p>
+        <h2 className="mt-4 font-serif text-4xl font-light text-cream sm:text-6xl">
+          Sve na <em className="italic text-cream/70">jednom</em> mjestu
+        </h2>
+      </div>
 
-        <div className="mt-16 sm:mt-28">
-          {groups.map((g, i) => (
-            <div
-              key={g.name}
-              className={`svc-move flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-12 ${
-                i === groups.length - 1 ? "" : "mb-16 sm:mb-24"
-              } ${indent[i]}`}
-            >
-              <h2 className="svc-name font-display text-[clamp(2.4rem,7vw,4.75rem)] leading-[1.08] text-bone">
-                {g.name}
-              </h2>
-              <ul className="max-w-[15rem] text-[0.9rem] leading-[2.05] text-ash sm:pt-[0.55em]">
-                {g.items.map((it) => (
-                  <li key={it}>{it}</li>
-                ))}
-              </ul>
+      <div className="mt-20">
+        {services.map((s) => (
+          <article key={s.n} className="service-row group relative">
+            <span className="service-line block h-px w-full bg-cream/15" />
+            <div className="grid gap-4 py-10 sm:grid-cols-[5rem_1fr_20rem] sm:items-baseline sm:gap-8">
+              <span className="service-n font-serif text-sm tracking-widest text-gold/80">
+                ({s.n})
+              </span>
+              <h3 className="service-title font-serif text-3xl font-light text-cream transition-transform duration-500 ease-out group-hover:translate-x-3 sm:text-5xl">
+                {s.title}
+              </h3>
+              <p className="service-text text-sm leading-relaxed text-cream-dim transition-colors duration-500 group-hover:text-cream/90">
+                {s.text}
+              </p>
             </div>
-          ))}
-        </div>
+            <span
+              aria-hidden
+              className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 font-serif text-2xl text-gold opacity-0 transition-all duration-500 group-hover:-translate-x-2 group-hover:opacity-100"
+            >
+              →
+            </span>
+          </article>
+        ))}
+        <span className="block h-px w-full bg-cream/15" />
       </div>
     </section>
   );

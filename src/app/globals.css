@@ -1,52 +1,42 @@
 @import "tailwindcss";
 
-@theme inline {
-  /* Oxblood-black. One palette, held across the whole page. */
-  --color-ink: #0b0407;
-  --color-ink-2: #100509;
-  --color-ink-3: #14060a;
-  --color-velvet: #1c0710;
-  --color-bone: #f0e6d9;
-  --color-ash: #9c8a80;
-  --color-rose: #c08a80;
+:root {
+  --background: #120507;
+  --surface: #1c090d;
+  --burgundy: #5e0b15;
+  --burgundy-deep: #3d060d;
+  --burgundy-glow: #8a1a28;
+  --cream: #f3ead9;
+  --cream-dim: #cbbfa8;
+  --gold: #c9a24b;
+}
 
-  --font-display: var(--font-gambarino), Georgia, "Times New Roman", serif;
-  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-burgundy: var(--burgundy);
+  --color-burgundy-deep: var(--burgundy-deep);
+  --color-burgundy-glow: var(--burgundy-glow);
+  --color-cream: var(--cream);
+  --color-cream-dim: var(--cream-dim);
+  --color-gold: var(--gold);
+  --font-serif: var(--font-cormorant);
+  --font-script: var(--font-script);
+  --font-sans: var(--font-jost);
 }
 
 html {
-  background-color: #0b0407;
   scroll-behavior: initial;
-  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  color: #f0e6d9;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  font-weight: 300;
+  background: var(--background);
+  color: var(--cream);
+  font-family: var(--font-jost), sans-serif;
   overflow-x: hidden;
 }
 
-/*
- * Premium noise: a fine grain on the substrate, behind every piece of
- * content, so the large tonal transitions never band. Felt, not seen.
- */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.055;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
 ::selection {
-  background: #4a0d18;
-  color: #f0e6d9;
-}
-
-:focus-visible {
-  outline: 1px solid #c08a80;
-  outline-offset: 4px;
+  background: var(--burgundy-glow);
+  color: var(--cream);
 }

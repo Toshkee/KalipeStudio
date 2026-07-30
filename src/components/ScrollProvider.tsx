@@ -18,9 +18,8 @@ export default function ScrollProvider() {
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
 
-    // Anchors travel with the same easing as the wheel. Without this the
-    // nav jumps instantly while everything else glides, which reads as two
-    // different systems bolted together.
+    // Anchor links glide through Lenis instead of jumping, so nav clicks
+    // feel like the rest of the scroll.
     const onClick = (e: MouseEvent) => {
       const link = (e.target as HTMLElement | null)?.closest?.(
         'a[href^="#"]'
@@ -39,7 +38,7 @@ export default function ScrollProvider() {
       const target = document.querySelector(hash);
       if (!target) return;
       e.preventDefault();
-      lenis.scrollTo(target as HTMLElement, { offset: -24, duration: 1.4 });
+      lenis.scrollTo(target as HTMLElement, { offset: -80, duration: 1.4 });
     };
 
     document.addEventListener("click", onClick);
