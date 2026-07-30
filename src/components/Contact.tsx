@@ -32,23 +32,23 @@ export default function Contact() {
 
   return (
     <section
-      id="kontakt"
+      id="contact"
       ref={root}
       className="scroll-mt-24 border-t border-cream/10 bg-surface py-32"
     >
       <div className="mx-auto grid max-w-6xl gap-14 px-6 lg:grid-cols-2 lg:gap-20">
         <div>
           <p className="contact-el text-[0.7rem] uppercase tracking-[0.45em] text-gold">
-            Kontakt
+            Contact
           </p>
           <h2 className="contact-el mt-5 font-serif text-4xl font-light text-cream sm:text-6xl">
-            Čekamo vas
+            Come and see us
           </h2>
 
           <address className="contact-el mt-12 space-y-8 not-italic">
             <div>
               <p className="text-[0.6rem] uppercase tracking-[0.3em] text-cream-dim/70">
-                Adresa
+                Address
               </p>
               <p className="mt-2 font-serif text-xl text-cream">
                 Piperska bb, lamela 3
@@ -59,7 +59,7 @@ export default function Contact() {
 
             <div>
               <p className="text-[0.6rem] uppercase tracking-[0.3em] text-cream-dim/70">
-                Telefon
+                Phone
               </p>
               <p className="mt-2 font-serif text-xl">
                 <a
@@ -96,14 +96,14 @@ export default function Contact() {
           </address>
 
           <p className="contact-el mt-12 max-w-sm text-sm leading-relaxed text-cream-dim">
-            Termine zakazujemo pozivom ili porukom na Instagramu — javite nam se
-            i pronaći ćemo vrijeme koje vam odgovara.
+            Appointments are booked by phone or Instagram message — get in touch
+            and we&rsquo;ll find a time that suits you.
           </p>
         </div>
 
         <div className="contact-map min-h-80 overflow-hidden border border-cream/10 lg:min-h-full">
           <iframe
-            title="Kalipè Studio — mapa"
+            title="Kalipè Studio — map"
             src="https://www.google.com/maps?q=Piperska%20bb%20Podgorica&output=embed"
             className="h-full min-h-80 w-full grayscale-[0.5] contrast-[0.85] invert-[0.9] hue-rotate-180"
             loading="lazy"

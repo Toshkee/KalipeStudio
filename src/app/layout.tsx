@@ -23,20 +23,20 @@ const jost = Jost({
 export const metadata: Metadata = {
   title: "Kalipè Studio — definition of beauty | Podgorica",
   description:
-    "Kalipè Studio u Podgorici — profesionalno šminkanje, svadbeni glam, frizerske usluge i njega noktiju. Piperska bb, City kej. Zakažite termin: 060 091 410.",
+    "Kalipè Studio in Podgorica — professional make-up, bridal glam, hair styling and nails. Piperska bb, City kej. Book an appointment: 060 091 410.",
   keywords: [
-    "salon ljepote Podgorica",
-    "šminkanje Podgorica",
-    "svadbena šminka",
-    "frizerski salon Podgorica",
-    "manikir Podgorica",
+    "beauty salon Podgorica",
+    "make-up artist Podgorica",
+    "bridal make-up Montenegro",
+    "hair salon Podgorica",
+    "manicure Podgorica",
     "Kalipe Studio",
   ],
   openGraph: {
     title: "Kalipè Studio — definition of beauty",
     description:
-      "Beauty studio u Podgorici: šminka, kosa, nokti. Piperska bb, City kej.",
-    locale: "sr_ME",
+      "Beauty studio in Podgorica: make-up, hair, nails. Piperska bb, City kej.",
+    locale: "en_US",
     type: "website",
   },
 };
@@ -48,7 +48,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="sr-Latn-ME"
+      lang="en"
       className={`${cormorant.variable} ${script.variable} ${jost.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>

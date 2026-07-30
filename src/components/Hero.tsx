@@ -48,7 +48,6 @@ export default function Hero() {
       <SilkCanvas className="absolute inset-0 h-full w-full" />
       <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background" />
 
-      {/* corner details */}
       <p className="hero-corner absolute left-6 top-24 hidden text-[0.65rem] uppercase tracking-[0.35em] text-cream-dim/70 lg:block">
         Est. 2026
       </p>
@@ -73,8 +72,8 @@ export default function Hero() {
         </p>
 
         <p className="hero-copy mx-auto mt-9 max-w-md font-serif text-lg leading-relaxed text-cream/75">
-          Šminka, kosa i nokti — studio Anđele Jovićević na jednoj adresi u
-          srcu Podgorice.
+          Make-up, hair and nails — Anđela Jovićević&rsquo;s studio, all under one
+          roof in the heart of Podgorica.
         </p>
 
         <div className="mt-11 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -82,7 +81,7 @@ export default function Hero() {
             href="tel:+38260091410"
             className="hero-cta rounded-full bg-gold px-9 py-3.5 text-[0.7rem] uppercase tracking-[0.25em] text-background transition-colors duration-300 hover:bg-cream"
           >
-            Zakaži termin
+            Book an appointment
           </a>
           <a
             href="https://www.instagram.com/kalipe.studio/"

@@ -7,23 +7,23 @@ import { useRef } from "react";
 const services = [
   {
     n: "01",
-    title: "Šminkanje",
-    text: "Profesionalna šminka za svaku priliku — od dnevnog izgleda do večernjeg glamura.",
+    title: "Make-up",
+    text: "Professional make-up for any occasion — from a natural daytime look to full evening glamour.",
   },
   {
     n: "02",
-    title: "Svadbeni glam",
-    text: "Proba, šminka i frizura na dan vjenčanja — kompletan izgled za vaš najvažniji dan.",
+    title: "Bridal glam",
+    text: "Trial, make-up and hair on the day itself — a complete look for your most important day.",
   },
   {
     n: "03",
-    title: "Kosa",
-    text: "Feniranje, talasi, punđe i farbanje — i preslatke pletenice sa perlicama za najmlađe.",
+    title: "Hair",
+    text: "Blow-dries, waves, updos and colouring — plus beaded braids for the little ones.",
   },
   {
     n: "04",
-    title: "Nokti",
-    text: "Njegovan manikir u elegantnim tonovima — od klasičnog nude do upečatljive crvene.",
+    title: "Nails",
+    text: "Beautifully kept manicures in elegant tones — from classic nude to a striking red.",
   },
 ];
 
@@ -45,21 +45,9 @@ export default function Services() {
           duration: 1.1,
           ease: "power4.inOut",
         })
-          .from(
-            row.querySelector(".service-n"),
-            { y: 20, opacity: 0, duration: 0.7 },
-            "-=0.7"
-          )
-          .from(
-            row.querySelector(".service-title"),
-            { y: 34, opacity: 0, duration: 0.8 },
-            "-=0.55"
-          )
-          .from(
-            row.querySelector(".service-text"),
-            { y: 16, opacity: 0, duration: 0.7 },
-            "-=0.5"
-          );
+          .from(row.querySelector(".service-n"), { y: 20, opacity: 0, duration: 0.7 }, "-=0.7")
+          .from(row.querySelector(".service-title"), { y: 34, opacity: 0, duration: 0.8 }, "-=0.55")
+          .from(row.querySelector(".service-text"), { y: 16, opacity: 0, duration: 0.7 }, "-=0.5");
       });
 
       gsap.from(".services-heading", {
@@ -74,11 +62,11 @@ export default function Services() {
   );
 
   return (
-    <section id="usluge" ref={root} className="mx-auto max-w-6xl scroll-mt-24 px-6 py-32">
+    <section id="services" ref={root} className="mx-auto max-w-6xl scroll-mt-24 px-6 py-32">
       <div className="services-heading">
-        <p className="text-[0.7rem] uppercase tracking-[0.45em] text-gold">Usluge</p>
+        <p className="text-[0.7rem] uppercase tracking-[0.45em] text-gold">Services</p>
         <h2 className="mt-4 font-serif text-4xl font-light text-cream sm:text-6xl">
-          Sve na <em className="italic text-cream/70">jednoj</em> adresi
+          Everything in <em className="italic text-cream/70">one</em> place
         </h2>
       </div>
 

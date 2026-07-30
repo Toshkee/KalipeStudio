@@ -2,14 +2,13 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef } from "react";
 
 const links = [
-  { href: "#usluge", label: "Usluge" },
-  { href: "#mladenke", label: "Mladenke" },
-  { href: "#galerija", label: "Galerija" },
-  { href: "#kontakt", label: "Kontakt" },
+  { href: "#services", label: "Services" },
+  { href: "#bridal", label: "Bridal" },
+  { href: "#gallery", label: "Gallery" },
+  { href: "#contact", label: "Contact" },
 ];
 
 export default function Nav() {
@@ -31,8 +30,6 @@ export default function Nav() {
         ease: "none",
         scrollTrigger: { start: "top -80", end: "max", toggleActions: "play none none reverse" },
       });
-
-      ScrollTrigger.refresh();
     },
     { scope: root }
   );
@@ -53,7 +50,7 @@ export default function Nav() {
                 className="group relative block text-[0.7rem] uppercase tracking-[0.25em] text-cream-dim transition-colors duration-300 hover:text-cream"
               >
                 {l.label}
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-gold transition-all duration-400 ease-out group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 h-px w-0 bg-gold transition-all duration-500 ease-out group-hover:w-full" />
               </a>
             </li>
           ))}

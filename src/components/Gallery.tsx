@@ -9,15 +9,15 @@ import { useRef } from "react";
 // speeds while scrolling.
 const columns: { label: string; ratio: string }[][] = [
   [
-    { label: "Svadbeni glam", ratio: "aspect-[3/4]" },
-    { label: "Nokti", ratio: "aspect-square" },
+    { label: "Bridal glam", ratio: "aspect-[3/4]" },
+    { label: "Nails", ratio: "aspect-square" },
   ],
   [
-    { label: "Šminka", ratio: "aspect-square" },
-    { label: "Frizura", ratio: "aspect-[3/4]" },
+    { label: "Make-up", ratio: "aspect-square" },
+    { label: "Hair", ratio: "aspect-[3/4]" },
   ],
   [
-    { label: "Pletenice", ratio: "aspect-[3/4]" },
+    { label: "Braids", ratio: "aspect-[3/4]" },
     { label: "Studio", ratio: "aspect-square" },
   ],
 ];
@@ -64,12 +64,12 @@ export default function Gallery() {
   );
 
   return (
-    <section id="galerija" ref={root} className="mx-auto max-w-6xl scroll-mt-24 px-6 py-32">
+    <section id="gallery" ref={root} className="mx-auto max-w-6xl scroll-mt-24 px-6 py-32">
       <div className="gallery-heading flex items-end justify-between">
         <div>
-          <p className="text-[0.7rem] uppercase tracking-[0.45em] text-gold">Galerija</p>
+          <p className="text-[0.7rem] uppercase tracking-[0.45em] text-gold">Gallery</p>
           <h2 className="mt-4 font-serif text-4xl font-light text-cream sm:text-6xl">
-            Naši radovi
+            Our work
           </h2>
         </div>
         <a
@@ -104,7 +104,7 @@ export default function Gallery() {
       </div>
 
       <p className="mt-12 text-center text-sm text-cream-dim sm:hidden">
-        Još radova na{" "}
+        More work on{" "}
         <a
           href="https://www.instagram.com/kalipe.studio/"
           target="_blank"

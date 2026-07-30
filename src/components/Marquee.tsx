@@ -2,9 +2,10 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef } from "react";
 
-const items = ["Šminka", "Svadbeni glam", "Frizure", "Farbanje", "Nokti", "Pletenice"];
+const items = ["Make-up", "Bridal glam", "Hair styling", "Colouring", "Nails", "Braids"];
 
 export default function Marquee() {
   const root = useRef<HTMLDivElement>(null);
@@ -21,22 +22,16 @@ export default function Marquee() {
       });
 
       // Scrolling nudges the strip's speed, so it feels reactive rather than canned.
-      gsap.to(loop, {
-        timeScale: 3,
-        duration: 0.4,
-        paused: true,
-        overwrite: true,
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top bottom",
-          end: "bottom top",
-          onUpdate: (self) => {
-            gsap.to(loop, {
-              timeScale: 1 + Math.min(Math.abs(self.getVelocity() / 900), 3),
-              duration: 0.3,
-              overwrite: true,
-            });
-          },
+      ScrollTrigger.create({
+        trigger: root.current,
+        start: "top bottom",
+        end: "bottom top",
+        onUpdate: (self) => {
+          gsap.to(loop, {
+            timeScale: 1 + Math.min(Math.abs(self.getVelocity() / 900), 3),
+            duration: 0.3,
+            overwrite: true,
+          });
         },
       });
     },
