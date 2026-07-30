@@ -4,7 +4,6 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Gallery from "@/components/Gallery";
 import Hero from "@/components/Hero";
-import Marquee from "@/components/Marquee";
 import Nav from "@/components/Nav";
 import ScrollProvider from "@/components/ScrollProvider";
 import Services from "@/components/Services";
@@ -15,7 +14,6 @@ export default function Home() {
       <ScrollProvider />
       <Nav />
       <Hero />
-      <Marquee />
       <About />
       <Services />
       <Bridal />

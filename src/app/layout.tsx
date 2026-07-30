@@ -1,42 +1,37 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Great_Vibes, Jost } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "500", "600"],
-});
-
-const script = Great_Vibes({
-  variable: "--font-script",
-  subsets: ["latin", "latin-ext"],
+/*
+ * One display voice for the whole brand, self-hosted. Gambarino carries
+ * the wordmark, the nav and every headline; body text sits in the system
+ * neutral so nothing argues with it.
+ */
+const gambarino = localFont({
+  src: "./fonts/Gambarino-Regular.woff2",
+  variable: "--font-gambarino",
   weight: "400",
-});
-
-const jost = Jost({
-  variable: "--font-jost",
-  subsets: ["latin", "latin-ext"],
-  weight: ["300", "400", "500"],
+  style: "normal",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Kalipè Studio — definition of beauty | Podgorica",
+  title: "Kalipè Studio · šminka, kosa i nokti u Podgorici",
   description:
-    "Kalipè Studio in Podgorica — professional make-up, bridal glam, hair styling and nails. Piperska bb, City kej. Book an appointment: 060 091 410.",
+    "Kalipè Studio na Piperskoj bb u Podgorici. Šminka, mladenke, kosa i nokti na jednom mjestu. Termini na 060 091 410.",
   keywords: [
-    "beauty salon Podgorica",
-    "make-up artist Podgorica",
-    "bridal make-up Montenegro",
-    "hair salon Podgorica",
-    "manicure Podgorica",
+    "šminkanje Podgorica",
+    "make up Podgorica",
+    "mladenačka šminka Crna Gora",
+    "frizerski salon Podgorica",
+    "manikir Podgorica",
     "Kalipe Studio",
   ],
   openGraph: {
-    title: "Kalipè Studio — definition of beauty",
+    title: "Kalipè Studio · definicija ljepote",
     description:
-      "Beauty studio in Podgorica: make-up, hair, nails. Piperska bb, City kej.",
-    locale: "en_US",
+      "Šminka, mladenke, kosa i nokti. Piperska bb, lamela 3, Podgorica.",
+    locale: "sr_ME",
     type: "website",
   },
 };
@@ -47,11 +42,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${cormorant.variable} ${script.variable} ${jost.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="cnr" className={`${gambarino.variable} h-full antialiased`}>
+      <body className="min-h-full">{children}</body>
     </html>
   );
 }

@@ -18,7 +18,34 @@ export default function ScrollProvider() {
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
 
+    // Anchors travel with the same easing as the wheel. Without this the
+    // nav jumps instantly while everything else glides, which reads as two
+    // different systems bolted together.
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as HTMLElement | null)?.closest?.(
+        'a[href^="#"]'
+      ) as HTMLAnchorElement | null;
+      if (!link) return;
+
+      const hash = link.getAttribute("href");
+      if (!hash) return;
+
+      if (hash === "#") {
+        e.preventDefault();
+        lenis.scrollTo(0, { duration: 1.4 });
+        return;
+      }
+
+      const target = document.querySelector(hash);
+      if (!target) return;
+      e.preventDefault();
+      lenis.scrollTo(target as HTMLElement, { offset: -24, duration: 1.4 });
+    };
+
+    document.addEventListener("click", onClick);
+
     return () => {
+      document.removeEventListener("click", onClick);
       gsap.ticker.remove(update);
       lenis.destroy();
     };

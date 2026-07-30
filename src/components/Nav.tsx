@@ -2,13 +2,14 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef } from "react";
 
 const links = [
-  { href: "#services", label: "Services" },
-  { href: "#bridal", label: "Bridal" },
-  { href: "#gallery", label: "Gallery" },
-  { href: "#contact", label: "Contact" },
+  { href: "#usluge", label: "Usluge" },
+  { href: "#mladenke", label: "Mladenke" },
+  { href: "#radovi", label: "Radovi" },
+  { href: "#kontakt", label: "Kontakt" },
 ];
 
 export default function Nav() {
@@ -17,18 +18,29 @@ export default function Nav() {
   useGSAP(
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        gsap.set(".nav-bg", { opacity: 1 });
+        gsap.set(".nav-surface", { opacity: 1 });
         return;
       }
 
-      gsap.from(root.current, { y: -70, opacity: 0, duration: 1, delay: 0.2, ease: "power3.out" });
+      // Enter by moving, never by fading in: if this never runs the bar is
+      // already on screen and readable.
+      gsap.from(root.current, { y: -64, duration: 1.1, delay: 0.15, ease: "power3.out" });
 
-      // Frosted bar only appears once the hero is behind us.
-      gsap.to(".nav-bg", {
-        opacity: 1,
-        duration: 0.4,
-        ease: "none",
-        scrollTrigger: { start: "top -80", end: "max", toggleActions: "play none none reverse" },
+      // The bar takes on a surface only once the velvet is behind us.
+      //
+      // Measured as absolute scroll positions, not from an element: the
+      // surface sits inside a fixed header, so it never travels through the
+      // viewport and has no geometry of its own to trigger on. Lenis drives
+      // ScrollTrigger.update, so this stays in step with the smooth scroll
+      // where a native scroll listener never fires at all.
+      const fade = (opacity: number) =>
+        gsap.to(".nav-surface", { opacity, duration: 0.4, ease: "power2.out", overwrite: true });
+
+      ScrollTrigger.create({
+        start: 120,
+        end: () => ScrollTrigger.maxScroll(window),
+        onEnter: () => fade(1),
+        onLeaveBack: () => fade(0),
       });
     },
     { scope: root }
@@ -36,32 +48,35 @@ export default function Nav() {
 
   return (
     <header ref={root} className="fixed inset-x-0 top-0 z-50">
-      <div className="nav-bg absolute inset-0 border-b border-cream/10 bg-background/70 opacity-0 backdrop-blur-md" />
-      <nav className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-        <a href="#" className="font-script text-2xl text-cream">
+      {/* Tonal surface, resolving to nothing at its lower edge: no drawn line. */}
+      <div
+        className="nav-surface pointer-events-none absolute inset-x-0 -bottom-6 top-0 opacity-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(11,4,7,0.94) 0%, rgba(11,4,7,0.9) 55%, rgba(11,4,7,0) 100%)",
+        }}
+      />
+
+      <nav className="relative mx-auto flex max-w-6xl items-baseline justify-between px-5 py-5 sm:px-8 sm:py-6">
+        <a
+          href="#"
+          className="font-display text-lg text-bone transition-colors duration-300 hover:text-rose sm:text-2xl"
+        >
           Kalipè
         </a>
 
-        <ul className="hidden items-center gap-9 sm:flex">
+        <ul className="flex items-baseline gap-3.5 sm:gap-8">
           {links.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
-                className="group relative block text-[0.7rem] uppercase tracking-[0.25em] text-cream-dim transition-colors duration-300 hover:text-cream"
+                className="font-display text-[0.7rem] text-ash transition-colors duration-300 hover:text-bone sm:text-[0.95rem]"
               >
                 {l.label}
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-gold transition-all duration-500 ease-out group-hover:w-full" />
               </a>
             </li>
           ))}
         </ul>
-
-        <a
-          href="tel:+38260091410"
-          className="rounded-full border border-gold/50 px-5 py-2 text-[0.65rem] uppercase tracking-[0.25em] text-gold transition-colors duration-300 hover:bg-gold hover:text-background"
-        >
-          060 091 410
-        </a>
       </nav>
     </header>
   );
