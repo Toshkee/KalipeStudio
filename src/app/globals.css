@@ -1,26 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #120507;
+  --surface: #1c090d;
+  --burgundy: #5e0b15;
+  --burgundy-deep: #3d060d;
+  --burgundy-glow: #8a1a28;
+  --cream: #f3ead9;
+  --cream-dim: #cbbfa8;
+  --gold: #c9a24b;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-burgundy: var(--burgundy);
+  --color-burgundy-deep: var(--burgundy-deep);
+  --color-burgundy-glow: var(--burgundy-glow);
+  --color-cream: var(--cream);
+  --color-cream-dim: var(--cream-dim);
+  --color-gold: var(--gold);
+  --font-serif: var(--font-cormorant);
+  --font-script: var(--font-script);
+  --font-sans: var(--font-jost);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: initial;
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--cream);
+  font-family: var(--font-jost), sans-serif;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--burgundy-glow);
+  color: var(--cream);
 }
