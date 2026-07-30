@@ -2,23 +2,54 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import Image from "next/image";
 import { useRef } from "react";
 
-// Placeholder tiles — swap the inner div for <Image> once original
-// photos arrive (public/gallery/*.jpg). Columns parallax at different
-// speeds while scrolling.
-const columns: { label: string; ratio: string }[][] = [
+// Stock placeholders — replace files in public/gallery/ with original
+// photos when they arrive (same names, no code change needed).
+// Columns parallax at different speeds while scrolling.
+const columns: { label: string; ratio: string; src: string; alt: string }[][] = [
   [
-    { label: "Mladenke", ratio: "aspect-[3/4]" },
-    { label: "Nokti", ratio: "aspect-square" },
+    {
+      label: "Mladenke",
+      ratio: "aspect-[3/4]",
+      src: "/gallery/mladenke.jpg",
+      alt: "Šminkanje mladenke prije vjenčanja",
+    },
+    {
+      label: "Nokti",
+      ratio: "aspect-square",
+      src: "/gallery/nokti.jpg",
+      alt: "Crveni manikir",
+    },
   ],
   [
-    { label: "Šminka", ratio: "aspect-square" },
-    { label: "Kosa", ratio: "aspect-[3/4]" },
+    {
+      label: "Šminka",
+      ratio: "aspect-square",
+      src: "/gallery/sminka.jpg",
+      alt: "Šminkerka sa četkicama za šminkanje",
+    },
+    {
+      label: "Kosa",
+      ratio: "aspect-[3/4]",
+      src: "/gallery/kosa.jpg",
+      alt: "Uvijanje lokni figarom",
+    },
   ],
   [
-    { label: "Pletenice", ratio: "aspect-[3/4]" },
-    { label: "Studio", ratio: "aspect-square" },
+    {
+      label: "Pletenice",
+      ratio: "aspect-[3/4]",
+      src: "/gallery/pletenice.jpg",
+      alt: "Pletenice s perlicama",
+    },
+    {
+      label: "Studio",
+      ratio: "aspect-square",
+      src: "/gallery/studio.jpg",
+      alt: "Unutrašnjost salona s ogledalima",
+    },
   ],
 ];
 
@@ -90,7 +121,17 @@ export default function Gallery() {
                 key={t.label}
                 className={`gallery-tile group relative overflow-hidden ${t.ratio}`}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-burgundy via-surface to-burgundy-deep transition-transform duration-700 ease-out group-hover:scale-105" />
+                <Image
+                  src={t.src}
+                  alt={t.alt}
+                  fill
+                  sizes="(max-width: 640px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+                <div
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background/85 to-transparent"
+                />
                 <figcaption className="absolute inset-x-0 bottom-0 flex items-baseline justify-between p-5">
                   <span className="font-serif text-lg italic text-cream/90">{t.label}</span>
                   <span className="text-[0.6rem] uppercase tracking-[0.25em] text-cream-dim/60">
