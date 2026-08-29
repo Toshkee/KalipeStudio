@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kalipè Studio">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5e0b15"/>
+      <stop offset="1" stop-color="#2a040b"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="13" fill="url(#bg)"/>
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="12.25" fill="none" stroke="#c9a24b" stroke-opacity="0.45" stroke-width="1.5"/>
+  <!-- Serifni "K" kao putanja, ne kao <text>: favicon se crta i tamo gdje
+       nijedan od naših fontova nije dostupan. -->
+  <g fill="none" stroke="#c9a24b" stroke-width="7">
+    <!-- Dijagonale kreću iz stabla pa se spajaju bez šava. -->
+    <path d="M27 32 46 16"/>
+    <path d="M27 32 47 48"/>
+  </g>
+  <g fill="#c9a24b">
+    <!-- stablo -->
+    <path d="M19 15h9v34h-9z"/>
+    <!-- serifi stabla -->
+    <path d="M15.5 15h16v3h-16zM15.5 46h16v3h-16z"/>
+  </g>
+</svg>

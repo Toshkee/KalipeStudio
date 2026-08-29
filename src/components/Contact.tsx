@@ -1,8 +1,13 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import { useRef } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
+import {
+  hasOpeningHours,
+  mapEmbedSrc,
+  openingHours,
+  studio,
+} from "@/lib/site";
 
 export default function Contact() {
   const root = useRef<HTMLElement>(null);
@@ -41,57 +46,80 @@ export default function Contact() {
           <p className="contact-el text-[0.7rem] uppercase tracking-[0.45em] text-gold">
             Kontakt
           </p>
-          <h2 className="contact-el mt-5 font-serif text-4xl font-light text-cream sm:text-6xl">
+          <h2 className="contact-el mt-5 font-serif text-4xl text-cream sm:text-6xl">
             Dođi kod nas
           </h2>
 
           <address className="contact-el mt-12 space-y-8 not-italic">
             <div>
-              <p className="text-[0.6rem] uppercase tracking-[0.3em] text-cream-dim/70">
+              <p className="text-[0.6rem] uppercase tracking-[0.3em] text-cream-dim/80">
                 Adresa
               </p>
               <p className="mt-2 font-serif text-xl text-cream">
-                Piperska bb, lamela 3
+                {studio.address.street}
                 <br />
-                City kej, Podgorica
+                {studio.address.district}, {studio.address.city}
               </p>
             </div>
 
             <div>
-              <p className="text-[0.6rem] uppercase tracking-[0.3em] text-cream-dim/70">
+              <p className="text-[0.6rem] uppercase tracking-[0.3em] text-cream-dim/80">
                 Telefon
               </p>
               <p className="mt-2 font-serif text-xl">
-                <a
-                  href="tel:+38260091410"
-                  className="text-cream transition-colors hover:text-gold"
-                >
-                  060 091 410
-                </a>
-                <span className="mx-3 text-cream-dim/40">·</span>
-                <a
-                  href="tel:+38269551250"
-                  className="text-cream transition-colors hover:text-gold"
-                >
-                  069 551 250
-                </a>
+                {studio.phones.map((p, i) => (
+                  <span key={p.tel}>
+                    {i > 0 && <span className="mx-3 text-cream-dim/50">·</span>}
+                    <a
+                      href={`tel:${p.tel}`}
+                      className="inline-block py-1 text-cream transition-colors hover:text-gold"
+                    >
+                      {p.display}
+                    </a>
+                  </span>
+                ))}
               </p>
             </div>
 
             <div>
-              <p className="text-[0.6rem] uppercase tracking-[0.3em] text-cream-dim/70">
+              <p className="text-[0.6rem] uppercase tracking-[0.3em] text-cream-dim/80">
                 Instagram
               </p>
               <p className="mt-2 font-serif text-xl">
                 <a
-                  href="https://www.instagram.com/kalipe.studio/"
+                  href={studio.instagram.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-cream transition-colors hover:text-gold"
+                  className="inline-block py-1 text-cream transition-colors hover:text-gold"
                 >
-                  @kalipe.studio ↗
+                  {studio.instagram.handle} ↗
                 </a>
               </p>
+            </div>
+
+            <div>
+              <p className="text-[0.6rem] uppercase tracking-[0.3em] text-cream-dim/80">
+                Radno vrijeme
+              </p>
+              {hasOpeningHours ? (
+                <dl className="mt-3 space-y-1.5">
+                  {openingHours.map((d) => (
+                    <div
+                      key={d.schema}
+                      className="flex max-w-xs items-baseline justify-between gap-4"
+                    >
+                      <dt className="text-sm text-cream-dim">{d.label}</dt>
+                      <dd className="font-serif text-base text-cream">
+                        {d.open && d.close ? `${d.open} – ${d.close}` : "Ne radimo"}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                <p className="mt-2 max-w-xs text-sm leading-relaxed text-cream-dim">
+                  Javi se telefonom ili porukom i reći ćemo ti kad smo slobodni.
+                </p>
+              )}
             </div>
           </address>
 
@@ -102,9 +130,13 @@ export default function Contact() {
         </div>
 
         <div className="contact-map min-h-80 overflow-hidden border border-cream/10 lg:min-h-full">
+          {/* Mapa se vodi pretragom adrese, ne ukucanim koordinatama: dva
+              nezavisna geokodera daju tačke udaljene ~370 m za samu ulicu,
+              a nijedan izvor ne pinuje studio. Kad vlasnica pošalje pin,
+              mijenja se `mapEmbedSrc` u src/lib/site.ts. */}
           <iframe
-            title="Kalipè Studio — mapa"
-            src="https://www.google.com/maps?q=Piperska%20bb%20Podgorica&output=embed"
+            title={`${studio.name} — mapa`}
+            src={mapEmbedSrc}
             className="h-full min-h-80 w-full grayscale-[0.5] contrast-[0.85] invert-[0.9] hue-rotate-180"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"

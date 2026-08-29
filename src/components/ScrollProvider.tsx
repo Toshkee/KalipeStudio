@@ -1,22 +1,33 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
 
 export default function ScrollProvider() {
   useGSAP(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 0.9 });
-    lenis.on("scroll", ScrollTrigger.update);
+    // Na dodir Lenis ionako ne preuzima skrol (syncTouch je podrazumijevano
+    // isključen) — ostane samo prazna rAF petlja i klasa na <html>. Telefon
+    // zato ide na svoj prirodni skrol, a ScrollTrigger sluša njega.
+    const touch = window.matchMedia("(pointer: coarse)").matches;
 
-    const update = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(update);
-    gsap.ticker.lagSmoothing(0);
+    // lerp 0.09 je značio 872 ms po jednom potezu točkića — izmjereno, i to
+    // sa zadnjom trećinom puta u puzanju. 0.15 se smiri za ~470 ms i i dalje
+    // klizi. wheelMultiplier je vraćen na 1: sa 0.9 je jedan zavrtaj nosio
+    // manje nego u svakom drugom sajtu, pa se osjećalo kao da vuče.
+    const lenis = touch
+      ? null
+      : new Lenis({ lerp: 0.15, wheelMultiplier: 1 });
+
+    let update: ((time: number) => void) | null = null;
+
+    if (lenis) {
+      lenis.on("scroll", ScrollTrigger.update);
+      update = (time: number) => lenis.raf(time * 1000);
+      gsap.ticker.add(update);
+      gsap.ticker.lagSmoothing(0);
+    }
 
     // Anchor links glide through Lenis instead of jumping, so nav clicks
     // feel like the rest of the scroll.
@@ -31,22 +42,33 @@ export default function ScrollProvider() {
 
       if (hash === "#") {
         e.preventDefault();
-        lenis.scrollTo(0, { duration: 1.4 });
+        if (lenis) lenis.scrollTo(0, { duration: 1.2 });
+        else window.scrollTo({ top: 0, behavior: "smooth" });
         return;
       }
 
       const target = document.querySelector(hash);
       if (!target) return;
       e.preventDefault();
-      lenis.scrollTo(target as HTMLElement, { offset: -80, duration: 1.4 });
+
+      if (lenis) {
+        lenis.scrollTo(target as HTMLElement, { offset: -80, duration: 1.2 });
+      } else {
+        // globals.css gasi scroll-behavior, pa se glatkoća traži ovdje.
+        const top =
+          (target as HTMLElement).getBoundingClientRect().top +
+          window.scrollY -
+          80;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
     };
 
     document.addEventListener("click", onClick);
 
     return () => {
       document.removeEventListener("click", onClick);
-      gsap.ticker.remove(update);
-      lenis.destroy();
+      if (update) gsap.ticker.remove(update);
+      lenis?.destroy();
     };
   });
 

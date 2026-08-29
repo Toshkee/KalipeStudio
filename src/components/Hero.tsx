@@ -1,8 +1,8 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import { useRef } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
+import { primaryPhone, studio } from "@/lib/site";
 import SilkCanvas from "./SilkCanvas";
 
 export default function Hero() {
@@ -57,11 +57,11 @@ export default function Hero() {
           className="hero-title mt-6 font-script text-[clamp(4.5rem,15vw,10.5rem)] leading-none text-cream"
           style={{ clipPath: "inset(0% 0% 0% 0%)" }}
         >
-          Kalipè
+          {studio.short}
         </h1>
 
         <p className="hero-tagline mt-5 text-[0.7rem] uppercase tracking-[0.5em] text-cream-dim sm:text-xs">
-          definicija ljepote
+          {studio.tagline}
         </p>
 
         <p className="hero-copy mx-auto mt-9 max-w-md font-serif text-lg leading-relaxed text-cream/75">
@@ -71,13 +71,13 @@ export default function Hero() {
 
         <div className="mt-11 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
-            href="tel:+38260091410"
+            href={`tel:${primaryPhone.tel}`}
             className="hero-cta rounded-full bg-gold px-9 py-3.5 text-[0.7rem] uppercase tracking-[0.25em] text-background transition-colors duration-300 hover:bg-cream"
           >
             Zakaži termin
           </a>
           <a
-            href="https://www.instagram.com/kalipe.studio/"
+            href={studio.instagram.url}
             target="_blank"
             rel="noopener noreferrer"
             className="hero-cta rounded-full border border-cream/25 px-9 py-3.5 text-[0.7rem] uppercase tracking-[0.25em] text-cream transition-colors duration-300 hover:border-gold hover:text-gold"

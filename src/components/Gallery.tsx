@@ -1,9 +1,9 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import Image from "next/image";
 import { useRef } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
+import { studio } from "@/lib/site";
 
 // Stock placeholders — replace files in public/gallery/ with original
 // photos when they arrive (same names, no code change needed).
@@ -99,17 +99,17 @@ export default function Gallery() {
       <div className="gallery-heading flex items-end justify-between">
         <div>
           <p className="text-[0.7rem] uppercase tracking-[0.45em] text-gold">Galerija</p>
-          <h2 className="mt-4 font-serif text-4xl font-light text-cream sm:text-6xl">
+          <h2 className="mt-4 font-serif text-4xl text-cream sm:text-6xl">
             Naši radovi
           </h2>
         </div>
         <a
-          href="https://www.instagram.com/kalipe.studio/"
+          href={studio.instagram.url}
           target="_blank"
           rel="noopener noreferrer"
           className="hidden text-[0.7rem] uppercase tracking-[0.3em] text-cream-dim transition-colors hover:text-gold sm:block"
         >
-          @kalipe.studio ↗
+          {studio.instagram.handle} ↗
         </a>
       </div>
 
@@ -134,7 +134,7 @@ export default function Gallery() {
                 />
                 <figcaption className="absolute inset-x-0 bottom-0 flex items-baseline justify-between p-5">
                   <span className="font-serif text-lg italic text-cream/90">{t.label}</span>
-                  <span className="text-[0.6rem] uppercase tracking-[0.25em] text-cream-dim/60">
+                  <span className="text-[0.6rem] uppercase tracking-[0.25em] text-cream-dim/80">
                     Kalipè
                   </span>
                 </figcaption>
@@ -147,12 +147,12 @@ export default function Gallery() {
       <p className="mt-12 text-center text-sm text-cream-dim sm:hidden">
         Još radova na{" "}
         <a
-          href="https://www.instagram.com/kalipe.studio/"
+          href={studio.instagram.url}
           target="_blank"
           rel="noopener noreferrer"
           className="text-gold underline-offset-4 hover:underline"
         >
-          @kalipe.studio
+          {studio.instagram.handle}
         </a>
       </p>
     </section>

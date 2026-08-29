@@ -1,8 +1,8 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import { useRef } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
+import { primaryPhone } from "@/lib/site";
 
 export default function Bridal() {
   const root = useRef<HTMLElement>(null);
@@ -31,7 +31,7 @@ export default function Bridal() {
     >
       <div className="relative mx-auto max-w-3xl px-6 text-center">
         <p className="bridal-el text-[0.7rem] uppercase tracking-[0.45em] text-gold">Mladenke</p>
-        <h2 className="bridal-el mt-6 font-serif text-4xl font-light leading-tight text-cream sm:text-6xl">
+        <h2 className="bridal-el mt-6 font-serif text-4xl leading-tight text-cream sm:text-6xl">
           Za dan kad kažeš{" "}
           <span className="font-script text-gold">da</span>
         </h2>
@@ -41,7 +41,7 @@ export default function Bridal() {
           detalj, na svoj veliki dan stižeš potpuno opuštena.
         </p>
         <a
-          href="tel:+38260091410"
+          href={`tel:${primaryPhone.tel}`}
           className="bridal-el mt-12 inline-block rounded-full border border-gold/70 px-11 py-4 text-[0.7rem] uppercase tracking-[0.3em] text-gold transition-all duration-300 hover:bg-gold hover:text-burgundy-deep"
         >
           Rezerviši svoj datum

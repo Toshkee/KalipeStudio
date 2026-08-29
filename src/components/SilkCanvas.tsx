@@ -9,7 +9,13 @@ void main() { gl_Position = vec4(p, 0.0, 1.0); }
 
 // Flowing velvet: domain-warped fbm noise in Kalipè burgundy,
 // with a faint gold shimmer along the ridges.
-const FRAG = `
+//
+// Cijena se plaća u sin(): jedan hash = jedan sin, noise zove hash četiri
+// puta, fbm zove noise jednom po oktavi, a main zove fbm pet puta. Pet
+// oktava je 100 sin() po pikselu. Zato telefon dobija četiri — peta oktava
+// nosi 3% amplitude na frekvenciji koja je na 390px ekranu ispod piksela,
+// pa se ne vidi, a košta kao i sve ostale.
+const frag = (octaves: number) => `
 precision highp float;
 uniform vec2 u_res;
 uniform float u_time;
@@ -33,7 +39,7 @@ float noise(vec2 p) {
 float fbm(vec2 p) {
   float v = 0.0;
   float a = 0.5;
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < ${octaves}; i++) {
     v += a * noise(p);
     p = p * 2.02 + vec2(13.7, 7.1);
     a *= 0.5;
@@ -79,6 +85,8 @@ export default function SilkCanvas({ className }: { className?: string }) {
     const gl = canvas.getContext("webgl", { antialias: false, alpha: false });
     if (!gl) return;
 
+    const phone = window.matchMedia("(max-width: 640px)").matches;
+
     const compile = (type: number, src: string) => {
       const s = gl.createShader(type)!;
       gl.shaderSource(s, src);
@@ -87,7 +95,7 @@ export default function SilkCanvas({ className }: { className?: string }) {
     };
     const prog = gl.createProgram()!;
     gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
-    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, frag(phone ? 4 : 5)));
     gl.linkProgram(prog);
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
     gl.useProgram(prog);
@@ -110,11 +118,21 @@ export default function SilkCanvas({ className }: { className?: string }) {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 };
 
+    // Na telefonu bez množenja piksela: 1.5× je 2,25 puta više posla za
+    // šum koji je ionako mutan. Na desktopu 1.5 ostaje.
+    const dprCap = phone ? 1 : 1.5;
+
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio, 1.5);
-      canvas.width = canvas.clientWidth * dpr;
-      canvas.height = canvas.clientHeight * dpr;
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      const dpr = Math.min(window.devicePixelRatio, dprCap);
+      const w = Math.round(canvas.clientWidth * dpr);
+      const h = Math.round(canvas.clientHeight * dpr);
+      // Bez ovog uslova skrivanje adresne trake na telefonu okida resize
+      // pri svakom skrolu, a svaki upis u canvas.width iznova alocira i
+      // briše GL bafer.
+      if (w === canvas.width && h === canvas.height) return;
+      canvas.width = w;
+      canvas.height = h;
+      gl.viewport(0, 0, w, h);
     };
     resize();
     window.addEventListener("resize", resize);
@@ -125,30 +143,59 @@ export default function SilkCanvas({ className }: { className?: string }) {
     };
     window.addEventListener("pointermove", onMove);
 
+    // `frame === 0` znači da frejm nije zakazan. Bez ovog čuvara je
+    // moguće pokrenuti drugu rAF petlju paralelno s prvom i crtati dvaput.
     let frame = 0;
-    let running = true;
+    let onScreen = true;
+    let visible = document.visibilityState === "visible";
     const start = performance.now();
-    const draw = () => {
-      if (!running) return;
+
+    const render = () => {
       mouse.x += (mouse.tx - mouse.x) * 0.04;
       mouse.y += (mouse.ty - mouse.y) * 0.04;
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, (performance.now() - start) / 1000);
       gl.uniform2f(uMouse, mouse.x, mouse.y);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
-      if (!reduce) frame = requestAnimationFrame(draw);
     };
-    draw();
+
+    const schedule = () => {
+      if (frame || reduce || !onScreen || !visible) return;
+      frame = requestAnimationFrame(tick);
+    };
+
+    const tick = () => {
+      frame = 0;
+      render();
+      schedule();
+    };
+
+    render();
+    schedule();
+
+    // Hero je 844px visok na stranici od 7700px. Bez ovoga shader nastavlja
+    // da crta i kad je odavno iza nas — izmjereno 360 crtanja u 422 ms dok
+    // je platno bilo 6777px iznad ekrana.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        schedule();
+      },
+      { rootMargin: "100px" }
+    );
+    io.observe(canvas);
 
     const onVisibility = () => {
-      running = document.visibilityState === "visible";
-      if (running && !reduce) frame = requestAnimationFrame(draw);
+      visible = document.visibilityState === "visible";
+      schedule();
     };
     document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
-      running = false;
+      onScreen = false;
+      visible = false;
       cancelAnimationFrame(frame);
+      io.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
       document.removeEventListener("visibilitychange", onVisibility);

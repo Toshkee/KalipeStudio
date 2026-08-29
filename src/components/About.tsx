@@ -1,13 +1,14 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import { useRef } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
+import { services, studio } from "@/lib/site";
 
 const stats = [
-  { k: "2026", v: "Novi prostor" },
-  { k: "3", v: "Vrste usluga" },
-  { k: "City kej", v: "Podgorica" },
+  { k: String(studio.founded), v: "Novi prostor" },
+  // Ranije je stajalo fiksno "3" pored liste od četiri usluge.
+  { k: String(services.length), v: "Vrste usluga" },
+  { k: studio.address.district, v: studio.address.city },
 ];
 
 export default function About() {
@@ -58,7 +59,7 @@ export default function About() {
 
         <div>
           <p className="about-el text-[0.7rem] uppercase tracking-[0.45em] text-gold">O nama</p>
-          <h2 className="about-el mt-5 font-serif text-4xl font-light leading-tight text-cream sm:text-5xl">
+          <h2 className="about-el mt-5 font-serif text-4xl leading-tight text-cream sm:text-5xl">
             Novo poglavlje,{" "}
             <em className="italic text-cream/70">isti osjećaj</em>
           </h2>
