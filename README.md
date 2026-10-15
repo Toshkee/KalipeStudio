@@ -62,6 +62,8 @@ src/
   app/
     layout.tsx            metadata, viewport, fontovi
     page.tsx              redoslijed sekcija
+    not-found.tsx         brendirana 404 (bordo, „Na početnu")
+    manifest.ts           web manifest: ime i boje za „Dodaj na početni ekran"
     robots.ts             MetadataRoute.Robots
     sitemap.ts            MetadataRoute.Sitemap
     icon.svg              monogram (moderni browseri)
@@ -92,5 +94,13 @@ src/
   „Otvori u mapama" koje vodi u aplikaciju.
 - **WebGL u herou** crta na 0.5× (telefon) / 0.6× (desktop) CSS veličine i na
   30 fps — šum je mutan i spor, pa se razlika ne vidi, a GPU radi ~6× manje.
+- **Fotografije studija ispod lg su 3D prsten** (`.orbit-*` u `globals.css`,
+  logika u `About.tsx`): 10 kartica na 36° (svaka od pet slika dvaput). Sam se
+  okreće 18°/s (konstanta `SPEED`, jedna kartica svake 2 s) dok je na ekranu,
+  nezavisno od skrola; prevlačenje prstom ga zaustavi i zavrti, pa nastavi.
+  JS upisuje samo `--rot`; položaj i prozirnost kartica računa CSS (`cos()`). Ranija traka sa scroll-snap-om se tresla jer
+  je GSAP pomjerao kartice unutar snap kontejnera. Od lg je i dalje mreža 5.
+- **Navigacija na desktopu** podvlači sekciju koja je na sredini ekrana
+  (ScrollTrigger po sekciji u `Nav.tsx`).
 - **Godina u footeru** je fiksna (`studio.founded`), ne `new Date()` — stranica se
   prerenderuje statički, pa bi se tekuća godina ispekla u build i zamrzla.

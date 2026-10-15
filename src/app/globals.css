@@ -81,3 +81,72 @@ summary {
 summary::-webkit-details-marker {
   display: none;
 }
+
+/* ───────────────────────── Vrteška fotografija studija ─────────────────────────
+   Ispod lg (64rem = 1024px, isto kao Tailwind `lg:`). Od lg naviše ove klase
+   ne rade ništa, pa Tailwind `lg:grid` iz komponente slaže pet u red.
+
+   Geometrija: 10 kartica na 36°. Poluprečnik je takav da između susjednih
+   kartica ostane 1.75rem: r = (w + 1.75rem) / (2·tan 18°). Prsten je gurnut
+   unazad za r, pa prednja kartica stoji na z = 0 u prirodnoj veličini, a
+   ostale se smanjuju kako odlaze u dubinu.
+
+   `--rot` upisuje JS (samostalno okretanje + prevlačenje); sve ostalo,
+   uključujući prozirnost kartica po uglu, računa CSS — jedan upis po frejmu.
+
+   Klase se zovu `orbit-*`, ne `ring-*`: `ring` je Tailwind utility koji crta
+   okvir od 1px u boji teksta, pa se okvir zadnjeg sloja vidio kao tanke
+   svijetle linije u razmacima između fotografija. */
+@media (max-width: 1023px) {
+  .orbit-stage {
+    --card-w: min(52vw, 15rem);
+    --r: calc((var(--card-w) + 1.75rem) / 0.6498);
+    position: relative;
+    height: calc(var(--card-w) * 1.25);
+    perspective: calc(var(--r) * 3.2);
+    overflow: hidden;
+    touch-action: pan-y pinch-zoom;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .orbit-stage:active {
+    cursor: grabbing;
+  }
+  .orbit {
+    --rot: 0deg;
+    position: relative;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: translateZ(calc(-1 * var(--r))) rotateY(var(--rot));
+    will-change: transform;
+  }
+  .orbit-card {
+    position: absolute;
+    top: 0;
+    left: calc(50% - var(--card-w) / 2);
+    width: var(--card-w);
+    height: 100%;
+    aspect-ratio: auto;
+    transform: rotateY(calc(var(--i) * 36deg)) translateZ(var(--r));
+    backface-visibility: hidden;
+    /* Prednja i dvije do nje su pune; na ~72° napola; iza 84° nestaju,
+       da se kartica koja odlazi iza ne odsiječe naglo. */
+    opacity: clamp(0, (cos(calc(var(--i) * 36deg + var(--rot))) - 0.1) / 0.5, 1);
+  }
+  .orbit-fade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2.5rem;
+    pointer-events: none;
+  }
+  .orbit-fade-l {
+    left: 0;
+    background: linear-gradient(to right, var(--surface), transparent);
+  }
+  .orbit-fade-r {
+    right: 0;
+    background: linear-gradient(to left, var(--surface), transparent);
+  }
+}

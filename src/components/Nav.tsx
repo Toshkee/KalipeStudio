@@ -22,6 +22,8 @@ export default function Nav() {
   const root = useRef<HTMLElement>(null);
   const firstLink = useRef<HTMLAnchorElement>(null);
   const [open, setOpen] = useState(false);
+  /** href sekcije koja je trenutno na sredini ekrana — zlatna linija u meniju. */
+  const [active, setActive] = useState<string | null>(null);
 
   const toggle = (next: boolean) => {
     lockPage(next);
@@ -51,6 +53,20 @@ export default function Nav() {
 
   useGSAP(
     () => {
+      // Koja je sekcija "trenutna": ona čiji dio prelazi sredinu ekrana.
+      // Radi i uz smanjeno kretanje — nije animacija nego orijentacija.
+      links.forEach((l) => {
+        const section = document.querySelector(l.href);
+        if (!section) return;
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top 50%",
+          end: "bottom 50%",
+          onToggle: (self) =>
+            setActive((prev) => (self.isActive ? l.href : prev === l.href ? null : prev)),
+        });
+      });
+
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         gsap.set(".nav-bg", { opacity: 1 });
         return;
@@ -151,17 +167,27 @@ export default function Nav() {
         </a>
 
         <ul className="hidden items-center gap-7 md:flex lg:gap-9">
-          {links.map((l) => (
-            <li key={l.href}>
-              <a
-                href={l.href}
-                className="group relative block py-3 text-[0.7rem] uppercase tracking-[0.25em] text-cream-dim transition-colors duration-300 hover:text-cream"
-              >
-                {l.label}
-                <span className="absolute bottom-2 left-0 h-px w-0 bg-gold transition-all duration-500 ease-out group-hover:w-full" />
-              </a>
-            </li>
-          ))}
+          {links.map((l) => {
+            const current = active === l.href;
+            return (
+              <li key={l.href}>
+                <a
+                  href={l.href}
+                  aria-current={current ? "location" : undefined}
+                  className={`group relative block py-3 text-[0.7rem] uppercase tracking-[0.25em] transition-colors duration-300 hover:text-cream ${
+                    current ? "text-cream" : "text-cream-dim"
+                  }`}
+                >
+                  {l.label}
+                  <span
+                    className={`absolute bottom-2 left-0 h-px bg-gold transition-all duration-500 ease-out group-hover:w-full ${
+                      current ? "w-full" : "w-0"
+                    }`}
+                  />
+                </a>
+              </li>
+            );
+          })}
         </ul>
 
         <button

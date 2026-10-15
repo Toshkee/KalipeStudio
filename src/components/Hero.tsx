@@ -13,17 +13,13 @@ export default function Hero() {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      tl.from(".hero-label", { y: 14, opacity: 0, duration: 0.9, delay: 0.3 })
-        .from(
-          ".hero-title",
-          {
-            clipPath: "inset(0% 100% 0% 0%)",
-            y: 30,
-            duration: 1.6,
-            ease: "power4.inOut",
-          },
-          "-=0.5"
-        )
+      tl.from(".hero-title", {
+        clipPath: "inset(0% 100% 0% 0%)",
+        y: 30,
+        duration: 1.6,
+        delay: 0.3,
+        ease: "power4.inOut",
+      })
         .from(
           ".hero-tagline",
           { opacity: 0, letterSpacing: "0.1em", duration: 1.2 },
@@ -53,12 +49,10 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background" />
 
       <div className="hero-inner relative z-10 w-full px-5 text-center">
-        <p className="hero-label text-[0.7rem] uppercase tracking-[0.45em] text-gold">
-          Studio ljepote
-        </p>
-
+        {/* Bez natpisa iznad imena: "Kalipè" je prvo što se vidi, a šta je
+            studio kaže rečenica ispod. */}
         <h1
-          className="hero-title mt-6 font-script text-[clamp(4.5rem,15vw,10.5rem)] leading-none text-cream"
+          className="hero-title font-script text-[clamp(4.5rem,15vw,10.5rem)] leading-none text-cream"
           style={{ clipPath: "inset(0% 0% 0% 0%)" }}
         >
           {studio.short}
