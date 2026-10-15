@@ -12,6 +12,13 @@ import {
   viberLink,
 } from "@/lib/site";
 
+/** Sve osim studijskog broja, koji je zlatno dugme iznad liste. */
+const channels: { label: string; value: string; href: string; external?: boolean }[] = [
+  ...studio.phones.slice(1).map((p) => ({ label: p.label, value: p.display, href: `tel:${p.tel}` })),
+  { label: "Viber", value: primaryPhone.display, href: viberLink },
+  { label: "Instagram", value: `${studio.instagram.handle} ↗`, href: studio.instagram.url, external: true },
+];
+
 export default function Contact() {
   const root = useRef<HTMLElement>(null);
 
@@ -52,40 +59,35 @@ export default function Contact() {
             Termine zakazujemo telefonom, na Viberu ili porukom na Instagramu.
           </p>
 
-          {/* Pozivi kao puna dugmad: na telefonu je ovo jedina stvar koju
-              neko na ovoj sekciji zapravo radi. */}
-          <div className="contact-el mt-8 grid gap-3 sm:max-w-md">
-            {studio.phones.map((p, i) => (
-              <a
-                key={p.tel}
-                href={`tel:${p.tel}`}
-                className={`flex h-14 items-center justify-between rounded-full px-6 transition-colors duration-300 ${
-                  i === 0
-                    ? "bg-gold text-background hover:bg-cream"
-                    : "border border-cream/20 text-cream hover:border-gold hover:text-gold"
-                }`}
-              >
-                <span className="text-[0.68rem] uppercase tracking-[0.25em]">{p.label}</span>
-                <span className="font-serif text-xl tabular-nums">{p.display}</span>
-              </a>
+          {/* Jedno puno dugme za studijski broj. Ostali kanali su redovi kao
+              lista tima u sekciji Studio: klikću se isto, a ne prave zid od
+              četiri dugmeta. */}
+          <a
+            href={`tel:${primaryPhone.tel}`}
+            className="contact-el mt-8 flex h-14 items-center justify-between rounded-full bg-gold px-6 text-background transition-colors duration-300 hover:bg-cream sm:max-w-md"
+          >
+            <span className="text-[0.68rem] uppercase tracking-[0.25em]">{primaryPhone.label}</span>
+            <span className="font-serif text-xl tabular-nums">{primaryPhone.display}</span>
+          </a>
+
+          <ul className="contact-el mt-6 border-t border-cream/10 sm:max-w-md">
+            {channels.map((c) => (
+              <li key={c.label} className="border-b border-cream/10">
+                <a
+                  href={c.href}
+                  {...(c.external && { target: "_blank", rel: "noopener noreferrer" })}
+                  className="group flex items-baseline justify-between gap-4 py-4"
+                >
+                  <span className="text-[0.68rem] uppercase tracking-[0.22em] text-cream-dim">
+                    {c.label}
+                  </span>
+                  <span className="font-serif text-xl text-cream tabular-nums transition-colors duration-300 group-hover:text-gold">
+                    {c.value}
+                  </span>
+                </a>
+              </li>
             ))}
-            <a
-              href={viberLink}
-              className="flex h-14 items-center justify-between rounded-full border border-cream/20 px-6 text-cream transition-colors duration-300 hover:border-gold hover:text-gold"
-            >
-              <span className="text-[0.68rem] uppercase tracking-[0.25em]">Viber</span>
-              <span className="font-serif text-xl tabular-nums">{primaryPhone.display}</span>
-            </a>
-            <a
-              href={studio.instagram.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-14 items-center justify-between rounded-full border border-cream/20 px-6 text-cream transition-colors duration-300 hover:border-gold hover:text-gold"
-            >
-              <span className="text-[0.68rem] uppercase tracking-[0.25em]">Instagram</span>
-              <span className="font-serif text-xl">{studio.instagram.handle} ↗</span>
-            </a>
-          </div>
+          </ul>
 
           <address className="contact-el mt-10 grid gap-8 not-italic sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
             <div>

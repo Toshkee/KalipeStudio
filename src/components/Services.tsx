@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { servicePhotos } from "@/lib/photos";
-import { hasPrices, primaryPhone, services } from "@/lib/site";
+import { hasPrices, services } from "@/lib/site";
 
 export default function Services() {
   const root = useRef<HTMLElement>(null);
@@ -98,13 +98,7 @@ export default function Services() {
           // Cijene još nisu objavljene. Radije iskrena rečenica nego
           // izmišljeni brojevi na sajtu pravog salona.
           <p className="mt-12 text-[0.95rem] leading-relaxed text-cream-dim lg:mt-16">
-            Cijenu ti kažemo unaprijed, zavisi od usluge i dužine kose.{" "}
-            <a
-              href={`tel:${primaryPhone.tel}`}
-              className="whitespace-nowrap text-gold underline decoration-gold/40 underline-offset-4 transition-colors hover:decoration-gold"
-            >
-              Pozovi {primaryPhone.display}
-            </a>
+            Cijenu ti kažemo unaprijed, zavisi od usluge i dužine kose.
           </p>
         )}
       </div>

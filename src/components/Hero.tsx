@@ -73,24 +73,14 @@ export default function Hero() {
           Podgorici.
         </p>
 
-        {/* Na telefonu dva jednaka dugmeta u redu — ranije su bila jedno
-            ispod drugog, različitih širina. */}
-        <div className="mx-auto mt-10 grid max-w-sm grid-cols-2 gap-3 sm:flex sm:max-w-none sm:justify-center sm:gap-4">
-          <a
-            href={`tel:${primaryPhone.tel}`}
-            className="hero-cta flex h-12 items-center justify-center rounded-full bg-gold px-4 whitespace-nowrap text-[0.7rem] uppercase tracking-[0.22em] text-background transition-colors duration-300 hover:bg-cream max-[359px]:px-2 max-[359px]:tracking-[0.12em] sm:px-9 sm:tracking-[0.25em]"
-          >
-            Zakaži termin
-          </a>
-          <a
-            href={studio.instagram.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hero-cta flex h-12 items-center justify-center rounded-full border border-cream/25 px-4 whitespace-nowrap text-[0.7rem] uppercase tracking-[0.22em] text-cream transition-colors duration-300 hover:border-gold hover:text-gold max-[359px]:px-2 max-[359px]:tracking-[0.12em] sm:px-9 sm:tracking-[0.25em]"
-          >
-            Instagram
-          </a>
-        </div>
+        {/* Samo jedno dugme. Većina dolazi preko linka sa Instagram profila,
+            pa bi dugme za Instagram vraćalo ljude odakle su došli. */}
+        <a
+          href={`tel:${primaryPhone.tel}`}
+          className="hero-cta mt-10 inline-flex h-12 items-center justify-center rounded-full bg-gold px-10 whitespace-nowrap text-[0.7rem] uppercase tracking-[0.25em] text-background transition-colors duration-300 hover:bg-cream"
+        >
+          Zakaži termin
+        </a>
       </div>
 
       <div className="hero-corner absolute bottom-8 left-1/2 -translate-x-1/2">

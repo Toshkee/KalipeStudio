@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { primaryPhone, studio, viberLink } from "@/lib/site";
+import { primaryPhone, viberLink } from "@/lib/site";
 
 /**
  * Donja traka za zakazivanje, samo na telefonu.
@@ -58,28 +58,20 @@ export default function MobileBar() {
         show ? "translate-y-0" : "translate-y-full"
       }`}
     >
-      {/* Tri jednaka dugmeta: poziv, Viber, Instagram. Kratke oznake jer
-          na 320px svako dobija ~89px. */}
-      <div className="grid grid-cols-3 gap-2 px-4 pt-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))]">
+      {/* Samo dva načina za zakazivanje: poziv i Viber. Instagram već ima
+          svoje mjesto u galeriji, kontaktu i footeru. */}
+      <div className="grid grid-cols-2 gap-2 px-4 pt-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))]">
         <a
           href={`tel:${primaryPhone.tel}`}
-          className="flex h-12 items-center justify-center rounded-full bg-gold text-[0.7rem] whitespace-nowrap uppercase tracking-[0.18em] text-background max-[359px]:tracking-[0.08em]"
+          className="flex h-12 items-center justify-center rounded-full bg-gold text-[0.7rem] whitespace-nowrap uppercase tracking-[0.22em] text-background"
         >
           Pozovi
         </a>
         <a
           href={viberLink}
-          className="flex h-12 items-center justify-center rounded-full border border-cream/25 text-[0.7rem] whitespace-nowrap uppercase tracking-[0.18em] text-cream max-[359px]:tracking-[0.08em]"
+          className="flex h-12 items-center justify-center rounded-full border border-cream/25 text-[0.7rem] whitespace-nowrap uppercase tracking-[0.22em] text-cream"
         >
           Viber
-        </a>
-        <a
-          href={studio.instagram.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex h-12 items-center justify-center rounded-full border border-cream/25 text-[0.7rem] whitespace-nowrap uppercase tracking-[0.18em] text-cream max-[359px]:tracking-[0.08em]"
-        >
-          Instagram
         </a>
       </div>
     </div>
