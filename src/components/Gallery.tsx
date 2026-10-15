@@ -74,7 +74,7 @@ export default function Gallery() {
           </a>
         </div>
 
-        <ul className="mt-8 grid grid-cols-2 gap-2 sm:mt-10 sm:grid-cols-3 sm:gap-3 lg:mt-14 lg:grid-cols-4 lg:gap-4">
+        <ul className="mt-8 grid grid-cols-2 gap-2 sm:mt-10 sm:grid-cols-4 sm:gap-3 lg:mt-14 lg:gap-4">
           {galleryPhotos.map((p, i) => (
             <li key={p.src.src} className="gallery-tile">
               <button
@@ -88,8 +88,9 @@ export default function Gallery() {
                   alt=""
                   fill
                   placeholder="blur"
-                  sizes="(min-width: 1024px) 270px, (min-width: 640px) 31vw, 48vw"
+                  sizes="(min-width: 1024px) 270px, (min-width: 640px) 23vw, 48vw"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  style={{ objectPosition: p.focus }}
                 />
               </button>
             </li>
