@@ -18,7 +18,8 @@ import {
  * kod koji se izvršava, i Next dokumentacija to izričito tako propisuje.
  *
  * Ne emituje se dok podaci nisu potvrđeni — netačan telefon ili adresa u
- * strukturiranim podacima je gori nego nikakvi strukturirani podaci.
+ * strukturiranim podacima je gori nego nikakvi strukturirani podaci. Radno
+ * vrijeme i cijene ulaze sami, tek kad se upišu u site.ts.
  */
 export default function JsonLd() {
   if (!DATA_CONFIRMED) return null;
@@ -29,8 +30,9 @@ export default function JsonLd() {
     "@id": `${SITE_URL}/#studio`,
     name: studio.name,
     url: SITE_URL,
-    image: `${SITE_URL}/opengraph-image`,
+    image: `${SITE_URL}/opengraph-image.jpg`,
     description: `Studio ljepote u ${studio.address.cityLocative}: šminka, mladenačka šminka, kosa i nokti.`,
+    founder: { "@type": "Person", name: "Anđela Jovićević" },
     address: {
       "@type": "PostalAddress",
       streetAddress: `${studio.address.street}, ${studio.address.district}`,
@@ -82,7 +84,7 @@ export default function JsonLd() {
       name: "Usluge",
       itemListElement: priced.map((s) => ({
         "@type": "Offer",
-        itemOffered: { "@type": "Service", name: s.title, description: s.text },
+        itemOffered: { "@type": "Service", name: s.title, description: s.items.join(", ") },
         price: s.from,
         priceCurrency: "EUR",
         availability: "https://schema.org/InStock",

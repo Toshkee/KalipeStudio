@@ -6,8 +6,8 @@ import Footer from "@/components/Footer";
 import Gallery from "@/components/Gallery";
 import Hero from "@/components/Hero";
 import JsonLd from "@/components/JsonLd";
+import MobileBar from "@/components/MobileBar";
 import Nav from "@/components/Nav";
-import Pricing from "@/components/Pricing";
 import ScrollProvider from "@/components/ScrollProvider";
 import Services from "@/components/Services";
 
@@ -18,14 +18,14 @@ export default function Home() {
       <ScrollProvider />
       <Nav />
       <Hero />
-      <About />
       <Services />
-      <Pricing />
+      <About />
       <Bridal />
       <Gallery />
       <Faq />
       <Contact />
       <Footer />
+      <MobileBar />
     </main>
   );
 }

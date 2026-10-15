@@ -51,14 +51,18 @@ export default function ScrollProvider() {
       if (!target) return;
       e.preventDefault();
 
+      // Sekcija staje tačno ispod fiksnog headera (56px na telefonu, 64px
+      // na desktopu) — sopstveni padding sekcije daje razmak do naslova.
+      const offset = document.querySelector("header nav")?.clientHeight ?? 64;
+
       if (lenis) {
-        lenis.scrollTo(target as HTMLElement, { offset: -80, duration: 1.2 });
+        lenis.scrollTo(target as HTMLElement, { offset: -offset, duration: 1.2 });
       } else {
         // globals.css gasi scroll-behavior, pa se glatkoća traži ovdje.
         const top =
           (target as HTMLElement).getBoundingClientRect().top +
           window.scrollY -
-          80;
+          offset;
         window.scrollTo({ top, behavior: "smooth" });
       }
     };

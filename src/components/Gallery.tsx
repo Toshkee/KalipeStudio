@@ -1,160 +1,176 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { useEffect, useRef, useState } from "react";
+import { ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
+import { galleryPhotos } from "@/lib/photos";
 import { studio } from "@/lib/site";
 
-// Stock placeholders — replace files in public/gallery/ with original
-// photos when they arrive (same names, no code change needed).
-// Columns parallax at different speeds while scrolling.
-const columns: { label: string; ratio: string; src: string; alt: string }[][] = [
-  [
-    {
-      label: "Mladenke",
-      ratio: "aspect-[3/4]",
-      src: "/gallery/mladenke.jpg",
-      alt: "Šminkanje mladenke prije vjenčanja",
-    },
-    {
-      label: "Nokti",
-      ratio: "aspect-square",
-      src: "/gallery/nokti.jpg",
-      alt: "Crveni manikir",
-    },
-  ],
-  [
-    {
-      label: "Šminka",
-      ratio: "aspect-square",
-      src: "/gallery/sminka.jpg",
-      alt: "Šminkerka sa četkicama za šminkanje",
-    },
-    {
-      label: "Kosa",
-      ratio: "aspect-[3/4]",
-      src: "/gallery/kosa.jpg",
-      alt: "Uvijanje lokni figarom",
-    },
-  ],
-  [
-    {
-      label: "Pletenice",
-      ratio: "aspect-[3/4]",
-      src: "/gallery/pletenice.jpg",
-      alt: "Pletenice s perlicama",
-    },
-    {
-      label: "Studio",
-      ratio: "aspect-square",
-      src: "/gallery/studio.jpg",
-      alt: "Unutrašnjost salona s ogledalima",
-    },
-  ],
-];
+const count = galleryPhotos.length;
 
 export default function Gallery() {
   const root = useRef<HTMLElement>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const swipeX = useRef<number | null>(null);
+  const [index, setIndex] = useState<number | null>(null);
+
+  const step = (dir: 1 | -1) =>
+    setIndex((i) => (i === null ? i : (i + dir + count) % count));
+
+  // <dialog> daje fokus unutra, Esc i inert pozadinu bez ijedne linije
+  // koda; stanje ga samo otvara i zatvara.
+  useEffect(() => {
+    const d = dialog.current;
+    if (!d) return;
+    if (index !== null && !d.open) d.showModal();
+    if (index === null && d.open) d.close();
+  }, [index]);
 
   useGSAP(
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      gsap.utils.toArray<HTMLElement>(".gallery-col").forEach((col, i) => {
-        gsap.to(col, {
-          yPercent: [-4, -14, -8][i] ?? -6,
-          ease: "none",
-          scrollTrigger: {
-            trigger: root.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
-      });
-
-      gsap.utils.toArray<HTMLElement>(".gallery-tile").forEach((tile, i) => {
-        gsap.from(tile, {
-          clipPath: "inset(100% 0% 0% 0%)",
-          duration: 1.2,
-          delay: (i % 3) * 0.12,
-          ease: "power4.inOut",
-          scrollTrigger: { trigger: tile, start: "top 88%" },
-        });
-      });
-
       gsap.from(".gallery-heading", {
-        y: 40,
+        y: 28,
         opacity: 0,
-        duration: 1,
+        duration: 0.9,
         ease: "power3.out",
-        scrollTrigger: { trigger: root.current, start: "top 75%" },
+        scrollTrigger: { trigger: root.current, start: "top 80%" },
+      });
+
+      // Jedan batch umjesto okidača po slici: pločice koje uđu zajedno
+      // dobijaju mali stagger, a na brzom skrolu ništa ne kasni.
+      gsap.set(".gallery-tile", { opacity: 0, y: 24 });
+      ScrollTrigger.batch(".gallery-tile", {
+        start: "top 92%",
+        once: true,
+        onEnter: (batch) =>
+          gsap.to(batch, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.07,
+            ease: "power3.out",
+          }),
       });
     },
     { scope: root }
   );
 
-  return (
-    <section id="galerija" ref={root} className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24">
-      <div className="gallery-heading flex items-end justify-between">
-        <div>
-          <p className="text-[0.7rem] uppercase tracking-[0.45em] text-gold">Galerija</p>
-          <h2 className="mt-4 font-serif text-4xl text-cream sm:text-6xl">
-            Naši radovi
-          </h2>
-        </div>
-        <a
-          href={studio.instagram.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden text-[0.7rem] uppercase tracking-[0.3em] text-cream-dim transition-colors hover:text-gold sm:block"
-        >
-          {studio.instagram.handle} ↗
-        </a>
-      </div>
+  const photo = index === null ? null : galleryPhotos[index];
 
-      <div className="mt-20 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
-        {columns.map((col, i) => (
-          <div key={i} className={`gallery-col flex flex-col gap-4 sm:gap-6 ${i === 1 ? "sm:mt-16" : ""}`}>
-            {col.map((t) => (
-              <figure
-                key={t.label}
-                className={`gallery-tile group relative overflow-hidden ${t.ratio}`}
+  return (
+    <section id="galerija" ref={root} className="scroll-mt-14 py-14 sm:py-20 lg:py-28">
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+        <div className="gallery-heading flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="section-title">Radovi</h2>
+          <a
+            href={studio.instagram.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="self-start py-1 text-[0.7rem] uppercase tracking-[0.25em] text-cream-dim transition-colors hover:text-gold sm:self-auto"
+          >
+            Još na {studio.instagram.handle} ↗
+          </a>
+        </div>
+
+        <ul className="mt-8 grid grid-cols-2 gap-2 sm:mt-10 sm:grid-cols-3 sm:gap-3 lg:mt-14 lg:grid-cols-4 lg:gap-4">
+          {galleryPhotos.map((p, i) => (
+            <li key={p.src.src} className="gallery-tile">
+              <button
+                type="button"
+                onClick={() => setIndex(i)}
+                aria-label={`Uvećaj: ${p.alt}`}
+                className="group relative block aspect-[4/5] w-full overflow-hidden"
               >
                 <Image
-                  src={t.src}
-                  alt={t.alt}
+                  src={p.src}
+                  alt=""
                   fill
-                  sizes="(max-width: 640px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  placeholder="blur"
+                  sizes="(min-width: 1024px) 270px, (min-width: 640px) 31vw, 48vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                 />
-                <div
-                  aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background/85 to-transparent"
-                />
-                <figcaption className="absolute inset-x-0 bottom-0 flex items-baseline justify-between p-5">
-                  <span className="font-serif text-lg italic text-cream/90">{t.label}</span>
-                  <span className="text-[0.6rem] uppercase tracking-[0.25em] text-cream-dim/80">
-                    Kalipè
-                  </span>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        ))}
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <p className="mt-12 text-center text-sm text-cream-dim sm:hidden">
-        Još radova na{" "}
-        <a
-          href={studio.instagram.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gold underline-offset-4 hover:underline"
-        >
-          {studio.instagram.handle}
-        </a>
-      </p>
+      <dialog
+        ref={dialog}
+        aria-label="Radovi studija"
+        data-lenis-prevent
+        onClose={() => setIndex(null)}
+        onClick={(e) => e.target === e.currentTarget && setIndex(null)}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowRight") step(1);
+          if (e.key === "ArrowLeft") step(-1);
+        }}
+        className="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none bg-background p-0 text-cream backdrop:bg-background/80"
+      >
+        {photo && index !== null && (
+          <div
+            // pan-y: vodoravni potez ide u JS kao swipe, a pinch-zoom
+            // ostaje pregledniku za uvećanje fotografije.
+            className="flex h-full touch-pan-y touch-pinch-zoom flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
+            onPointerDown={(e) => (swipeX.current = e.clientX)}
+            onPointerCancel={() => (swipeX.current = null)}
+            onPointerUp={(e) => {
+              if (swipeX.current === null) return;
+              const dx = e.clientX - swipeX.current;
+              swipeX.current = null;
+              if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+            }}
+          >
+            <div className="flex h-14 shrink-0 items-center justify-between px-5 sm:px-8">
+              <p className="text-[0.7rem] tracking-[0.25em] text-cream-dim tabular-nums">
+                {index + 1} / {count}
+              </p>
+              <button
+                type="button"
+                onClick={() => setIndex(null)}
+                className="-mr-2.5 h-11 px-2.5 text-[0.68rem] uppercase tracking-[0.25em] text-cream"
+              >
+                Zatvori
+              </button>
+            </div>
+
+            <div className="relative mx-5 min-h-0 flex-1 sm:mx-20">
+              <Image
+                key={index}
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                placeholder="blur"
+                sizes="100vw"
+                draggable={false}
+                className="object-contain select-none"
+              />
+            </div>
+
+            <div className="flex h-16 shrink-0 items-center justify-between px-2 sm:px-6">
+              <button
+                type="button"
+                onClick={() => step(-1)}
+                aria-label="Prethodna fotografija"
+                className="flex size-12 items-center justify-center text-xl text-cream-dim transition-colors hover:text-cream"
+              >
+                ←
+              </button>
+              <p className="text-[0.7rem] uppercase tracking-[0.25em] text-cream-dim">{photo.kind}</p>
+              <button
+                type="button"
+                onClick={() => step(1)}
+                aria-label="Sljedeća fotografija"
+                className="flex size-12 items-center justify-center text-xl text-cream-dim transition-colors hover:text-cream"
+              >
+                →
+              </button>
+            </div>
+          </div>
+        )}
+      </dialog>
     </section>
   );
 }

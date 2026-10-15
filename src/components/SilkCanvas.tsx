@@ -118,14 +118,16 @@ export default function SilkCanvas({ className }: { className?: string }) {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 };
 
-    // Na telefonu bez množenja piksela: 1.5× je 2,25 puta više posla za
-    // šum koji je ionako mutan. Na desktopu 1.5 ostaje.
-    const dprCap = phone ? 1 : 1.5;
+    // Platno se crta u manjoj rezoluciji od CSS veličine, a preglednik ga
+    // razvlači bilinearno. Najfinija oktava šuma ima period od ~35 CSS
+    // piksela, pa na 0.6 i dalje dobija ~20 piksela po talasu — razlika se
+    // ne vidi, a posla je manje. Ranije je desktop crtao na 1.5× DPR, tj.
+    // 3,4 miliona piksela na 1710×896 ekranu; sada ~550 hiljada.
+    const scale = phone ? 0.5 : 0.6;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio, dprCap);
-      const w = Math.round(canvas.clientWidth * dpr);
-      const h = Math.round(canvas.clientHeight * dpr);
+      const w = Math.max(1, Math.round(canvas.clientWidth * scale));
+      const h = Math.max(1, Math.round(canvas.clientHeight * scale));
       // Bez ovog uslova skrivanje adresne trake na telefonu okida resize
       // pri svakom skrolu, a svaki upis u canvas.width iznova alocira i
       // briše GL bafer.
@@ -149,6 +151,9 @@ export default function SilkCanvas({ className }: { className?: string }) {
     let onScreen = true;
     let visible = document.visibilityState === "visible";
     const start = performance.now();
+    // Baršun se pomjera sporo (t * 0.05), pa 30 crtanja u sekundi izgleda
+    // isto kao 60 — a GPU, Lenis i GSAP dijele isti frejm na desktopu.
+    let last = 0;
 
     const render = () => {
       mouse.x += (mouse.tx - mouse.x) * 0.04;
@@ -164,9 +169,12 @@ export default function SilkCanvas({ className }: { className?: string }) {
       frame = requestAnimationFrame(tick);
     };
 
-    const tick = () => {
+    const tick = (now: number) => {
       frame = 0;
-      render();
+      if (now - last >= 32) {
+        last = now;
+        render();
+      }
       schedule();
     };
 

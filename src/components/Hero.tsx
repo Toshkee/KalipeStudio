@@ -44,11 +44,15 @@ export default function Hero() {
   );
 
   return (
-    <section ref={root} className="relative flex min-h-svh items-center justify-center overflow-hidden">
+    <section
+      id="vrh"
+      ref={root}
+      className="relative flex min-h-svh items-center justify-center overflow-hidden"
+    >
       <SilkCanvas className="absolute inset-0 h-full w-full" />
       <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background" />
 
-      <div className="hero-inner relative z-10 px-6 text-center">
+      <div className="hero-inner relative z-10 w-full px-5 text-center">
         <p className="hero-label text-[0.7rem] uppercase tracking-[0.45em] text-gold">
           Studio ljepote
         </p>
@@ -64,15 +68,17 @@ export default function Hero() {
           {studio.tagline}
         </p>
 
-        <p className="hero-copy mx-auto mt-9 max-w-md font-serif text-lg leading-relaxed text-cream/75">
-          Šminka, kosa i nokti — studio Anđele Jovićević, sve na jednom mjestu
-          u srcu Podgorice.
+        <p className="hero-copy mx-auto mt-8 max-w-[22rem] font-serif text-[1.15rem] leading-relaxed text-cream/80 sm:max-w-md sm:text-xl">
+          Šminka, kosa i nokti. Studio Anđele Jovićević u City keju u
+          Podgorici.
         </p>
 
-        <div className="mt-11 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        {/* Na telefonu dva jednaka dugmeta u redu — ranije su bila jedno
+            ispod drugog, različitih širina. */}
+        <div className="mx-auto mt-10 grid max-w-sm grid-cols-2 gap-3 sm:flex sm:max-w-none sm:justify-center sm:gap-4">
           <a
             href={`tel:${primaryPhone.tel}`}
-            className="hero-cta rounded-full bg-gold px-9 py-3.5 text-[0.7rem] uppercase tracking-[0.25em] text-background transition-colors duration-300 hover:bg-cream"
+            className="hero-cta flex h-12 items-center justify-center rounded-full bg-gold px-4 whitespace-nowrap text-[0.7rem] uppercase tracking-[0.22em] text-background transition-colors duration-300 hover:bg-cream max-[359px]:px-2 max-[359px]:tracking-[0.12em] sm:px-9 sm:tracking-[0.25em]"
           >
             Zakaži termin
           </a>
@@ -80,7 +86,7 @@ export default function Hero() {
             href={studio.instagram.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="hero-cta rounded-full border border-cream/25 px-9 py-3.5 text-[0.7rem] uppercase tracking-[0.25em] text-cream transition-colors duration-300 hover:border-gold hover:text-gold"
+            className="hero-cta flex h-12 items-center justify-center rounded-full border border-cream/25 px-4 whitespace-nowrap text-[0.7rem] uppercase tracking-[0.22em] text-cream transition-colors duration-300 hover:border-gold hover:text-gold max-[359px]:px-2 max-[359px]:tracking-[0.12em] sm:px-9 sm:tracking-[0.25em]"
           >
             Instagram
           </a>

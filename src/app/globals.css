@@ -27,6 +27,14 @@
 
 html {
   scroll-behavior: initial;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Meni na telefonu i lightbox galerije zaključavaju stranicu ispod sebe. */
+html.menu-open,
+html:has(dialog[open]) {
+  overflow: hidden;
 }
 
 body {
@@ -34,9 +42,42 @@ body {
   color: var(--cream);
   font-family: var(--font-jost), sans-serif;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
   background: var(--burgundy-glow);
   color: var(--cream);
+}
+
+:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* Naslovi sekcija: jedna fluidna skala umjesto tri breakpointa. Na 390px je
+   ~37px, na desktopu staje na 60px. */
+.section-title {
+  font-family: var(--font-garamond), serif;
+  font-size: clamp(2.25rem, 1.6rem + 3vw, 3.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--cream);
+  /* Bez ovoga "Novi prostor u City keju" na telefonu ostavlja "keju"
+     samu u drugom redu. */
+  text-wrap: balance;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+summary {
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
 }

@@ -1,15 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
-import { services, studio } from "@/lib/site";
+import { studioPhotos } from "@/lib/photos";
+import { team } from "@/lib/site";
 
-const stats = [
-  { k: String(studio.founded), v: "Novi prostor" },
-  // Ranije je stajalo fiksno "3" pored liste od četiri usluge.
-  { k: String(services.length), v: "Vrste usluga" },
-  { k: studio.address.district, v: studio.address.city },
-];
+const [main, ...rest] = studioPhotos;
 
 export default function About() {
   const root = useRef<HTMLElement>(null);
@@ -18,78 +15,125 @@ export default function About() {
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      gsap.from(".about-portrait", {
+      gsap.from(".about-photo", {
         clipPath: "inset(0% 0% 100% 0%)",
-        duration: 1.4,
+        duration: 1.3,
         ease: "power4.inOut",
-        scrollTrigger: { trigger: root.current, start: "top 75%" },
+        scrollTrigger: { trigger: ".about-photo", start: "top 85%" },
       });
 
       gsap.from(".about-el", {
-        y: 34,
+        y: 28,
         opacity: 0,
         duration: 0.9,
-        stagger: 0.14,
+        stagger: 0.12,
         ease: "power3.out",
-        scrollTrigger: { trigger: root.current, start: "top 70%" },
+        scrollTrigger: { trigger: ".about-text", start: "top 82%" },
       });
 
-      gsap.to(".about-portrait-inner", {
-        yPercent: -8,
-        ease: "none",
-        scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true },
+      gsap.from(".about-strip li", {
+        x: 40,
+        opacity: 0,
+        duration: 0.9,
+        stagger: 0.08,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".about-strip", start: "top 88%" },
+      });
+
+      // Paralaksa samo na desktopu. Na telefonu skrol ide prirodno i svaki
+      // scrub je još jedan posao po frejmu za ono malo pomjeraja.
+      gsap.matchMedia().add("(min-width: 1024px)", () => {
+        gsap.to(".about-photo-inner", {
+          yPercent: -7,
+          ease: "none",
+          scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true },
+        });
       });
     },
     { scope: root }
   );
 
   return (
-    <section ref={root} className="mx-auto max-w-6xl px-6 py-24">
-      <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,0.85fr)_1fr] lg:gap-20">
-        {/* Portrait placeholder — swap inner div for <Image> when photos arrive */}
-        <figure className="about-portrait relative aspect-[4/5] overflow-hidden">
-          <div className="about-portrait-inner absolute inset-0 scale-110 bg-gradient-to-br from-burgundy via-surface to-burgundy-deep" />
-          <figcaption className="absolute bottom-0 left-0 p-6">
-            <span className="font-script text-3xl text-cream">Anđela</span>
-            <span className="mt-1 block text-[0.6rem] uppercase tracking-[0.3em] text-cream-dim">
-              Šminkerka i osnivačica
-            </span>
-          </figcaption>
+    <section id="studio" ref={root} className="scroll-mt-14 border-t border-cream/10 bg-surface py-14 sm:py-20 lg:py-28">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[1fr_minmax(0,0.85fr)] lg:items-center lg:gap-20">
+        <figure className="about-photo relative aspect-[4/5] overflow-hidden lg:order-2">
+          <div className="about-photo-inner absolute inset-0 lg:-bottom-[8%]">
+            <Image
+              src={main.src}
+              alt={main.alt}
+              fill
+              placeholder="blur"
+              sizes="(min-width: 1024px) 460px, (min-width: 640px) calc(100vw - 4rem), calc(100vw - 2.5rem)"
+              className="object-cover"
+            />
+          </div>
         </figure>
 
-        <div>
-          <p className="about-el text-[0.7rem] uppercase tracking-[0.45em] text-gold">O nama</p>
-          <h2 className="about-el mt-5 font-serif text-4xl leading-tight text-cream sm:text-5xl">
-            Novo poglavlje,{" "}
-            <em className="italic text-cream/70">isti osjećaj</em>
-          </h2>
+        <div className="about-text lg:order-1">
+          <h2 className="about-el section-title">Novi prostor u City keju</h2>
 
-          <div className="about-el mt-8 space-y-5 leading-relaxed text-cream-dim">
-            <p>
-              Kalipè je počeo kao rad jedne šminkerke i ljubav prema detalju
-              koji mijenja cijeli izgled. U januaru 2026. otvorili smo vrata
-              novog prostora — zamišljenog tako da sve što ti treba bude na
-              jednom mjestu.
-            </p>
-            <p>
-              Danas, pored profesionalnog šminkanja, Kalipè nudi i frizerske i
-              kozmetičke usluge. Isti pristup, više prostora: dođeš na termin,
-              a ostaneš zbog osjećaja.
-            </p>
-          </div>
+          <p className="about-el mt-6 max-w-xl text-[0.95rem] leading-relaxed text-cream-dim sm:text-base">
+            Kalipè je počeo kao Anđelin rad sa šminkom: mladenke, mature,
+            proslave. Od 9. januara 2026. radimo u novom prostoru u Piperskoj,
+            a uz šminku sada radimo i kosu i nokte.
+          </p>
 
-          <dl className="about-el mt-12 grid grid-cols-3 gap-6 border-t border-cream/10 pt-8">
-            {stats.map((s) => (
-              <div key={s.k}>
-                <dt className="font-serif text-2xl text-cream">{s.k}</dt>
-                <dd className="mt-1 text-[0.65rem] uppercase tracking-[0.2em] text-cream-dim">
-                  {s.v}
+          <blockquote className="about-el mt-8 max-w-xl border-l border-gold/60 pl-5">
+            <p className="font-serif text-[1.3rem] leading-snug text-cream/90 italic sm:text-2xl">
+              „Nestrpljivo sam čekala dan kada ćemo otvoriti vrata novog
+              prostora i pružiti vam kompletnu uslugu uljepšavanja.“
+            </p>
+            <footer className="mt-3 text-[0.68rem] uppercase tracking-[0.22em] text-cream-dim">
+              Anđela Jovićević
+            </footer>
+          </blockquote>
+
+          <dl className="about-el mt-10 max-w-xl border-t border-cream/10">
+            {team.map((t) => (
+              <div
+                key={t.name}
+                className="flex items-baseline justify-between gap-4 border-b border-cream/10 py-4"
+              >
+                <dt className="font-serif text-xl text-cream sm:text-2xl">{t.name}</dt>
+                <dd className="text-right">
+                  <span className="text-[0.68rem] uppercase tracking-[0.22em] text-gold">
+                    {t.role}
+                  </span>
+                  {t.note && (
+                    <span className="mt-1 block text-[0.8rem] text-cream-dim">{t.note}</span>
+                  )}
                 </dd>
               </div>
             ))}
           </dl>
         </div>
       </div>
+
+      {/* Na telefonu traka koja se prevlači prstom — sljedeća slika viri s
+          desne strane da se vidi da ima još. Na desktopu pet u redu. */}
+      <ul
+        aria-label="Fotografije studija"
+        className="about-strip no-scrollbar mt-12 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 sm:scroll-px-8 sm:px-8 lg:mx-auto lg:mt-20 lg:grid lg:max-w-6xl lg:grid-cols-5 lg:gap-4 lg:overflow-visible"
+      >
+        {rest.map((p) => (
+          <li
+            key={p.src.src}
+            className="relative aspect-[4/5] w-[72%] shrink-0 snap-start overflow-hidden sm:w-[42%] lg:w-auto"
+          >
+            <Image
+              src={p.src}
+              alt={p.alt}
+              fill
+              placeholder="blur"
+              sizes="(min-width: 1024px) 220px, (min-width: 640px) 42vw, 72vw"
+              className="object-cover"
+            />
+          </li>
+        ))}
+        {/* Desni odmak na kraju trake: padding-right u flex skroleru Safari
+            ne računa uvijek, pa posljednja slika lijepi uz ivicu ekrana. */}
+        <li aria-hidden className="w-2 shrink-0 sm:w-5 lg:hidden" />
+      </ul>
     </section>
   );
 }

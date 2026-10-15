@@ -12,12 +12,12 @@ export default function Faq() {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
       gsap.from(".faq-el", {
-        y: 30,
+        y: 24,
         opacity: 0,
-        duration: 0.9,
-        stagger: 0.1,
+        duration: 0.8,
+        stagger: 0.07,
         ease: "power3.out",
-        scrollTrigger: { trigger: root.current, start: "top 78%" },
+        scrollTrigger: { trigger: root.current, start: "top 80%" },
       });
     },
     { scope: root }
@@ -29,27 +29,37 @@ export default function Faq() {
     <section
       id="pitanja"
       ref={root}
-      className="mx-auto max-w-6xl scroll-mt-24 px-6 py-24"
+      className="scroll-mt-14 border-t border-cream/10 py-14 sm:py-20 lg:py-28"
     >
-      <div className="faq-el">
-        <p className="text-[0.7rem] uppercase tracking-[0.45em] text-gold">
-          Česta pitanja
-        </p>
-        <h2 className="mt-4 font-serif text-4xl text-cream sm:text-6xl">
-          Dobro je znati
-        </h2>
-      </div>
+      <div className="mx-auto grid max-w-6xl gap-8 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.8fr)_1.2fr] lg:gap-20">
+        <h2 className="faq-el section-title">Česta pitanja</h2>
 
-      <dl className="mt-16 grid gap-x-16 gap-y-10 sm:grid-cols-2">
-        {faqs.map((f) => (
-          <div key={f.q} className="faq-el">
-            <dt className="font-serif text-xl text-cream sm:text-2xl">{f.q}</dt>
-            <dd className="mt-3 text-sm leading-relaxed text-cream-dim">
-              {f.a}
-            </dd>
-          </div>
-        ))}
-      </dl>
+        {/* Harmonika: na telefonu pet otvorenih odgovora je ekran i po
+            teksta koji većina neće čitati. Prvo pitanje je otvoreno. */}
+        <div className="border-t border-cream/10">
+          {faqs.map((f, i) => (
+            <details
+              key={f.q}
+              open={i === 0}
+              className="faq-el group border-b border-cream/10"
+            >
+              <summary className="flex cursor-pointer items-center justify-between gap-6 py-5 font-serif text-[1.3rem] leading-snug text-cream sm:text-2xl">
+                {f.q}
+                <span
+                  aria-hidden
+                  className="relative size-3 shrink-0 text-gold transition-transform duration-300 group-open:rotate-45"
+                >
+                  <span className="absolute top-1/2 left-0 h-px w-3 bg-current" />
+                  <span className="absolute top-0 left-1/2 h-3 w-px bg-current" />
+                </span>
+              </summary>
+              <p className="-mt-1 max-w-xl pr-8 pb-6 text-[0.95rem] leading-relaxed text-cream-dim">
+                {f.a}
+              </p>
+            </details>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
